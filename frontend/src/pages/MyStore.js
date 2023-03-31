@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/MyStore.module.css";
-let categoryData = [
-  {
-    _id: 1,
-    name: "shirts",
-    slug: "1",
-    image:
-      "http://localhost:3000/static/media/PRO%20MANI%20LOGO.3423e0232b72624313ab.jpg",
-    owner: "a0x13bskghXx1203",
-  },
-  {
-    _id: 2,
-    name: "T-shirts",
-    slug: "7",
-    image:
-      "http://localhost:3000/static/media/PRO%20MANI%20LOGO.3423e0232b72624313ab.jpg",
-    owner: "a0x13bskghXx1203",
-  },
-];
+import { postDetails } from "../CloudiNary";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCategoryFunc,
+  deleteCategoryFunc,
+  deleteProductFunc,
+  editCategoryFunc,
+  getCategoryFunc,
+  getProductFunc,
+} from "../Redux/action";
+import { GETCATDATA } from "../Redux/action.type";
 
 let productData = [
   {
@@ -42,6 +35,11 @@ let productData = [
     owner: "a0x13bskghXx1203",
   },
 ];
+let editCatData = {
+  name: "",
+  slug: "",
+  image: "",
+};
 
 const MyStore = () => {
   const Navigate = useNavigate();
@@ -55,19 +53,23 @@ const MyStore = () => {
   const [display6, setDisplay6] = useState("none");
   const [display7, setDisplay7] = useState("none");
   const [display8, setDisplay8] = useState("none");
-  const [catName, setCatName] = useState("none");
-  const [catSlug, setCatSlug] = useState("none");
-  const [catImg, setCatImg] = useState("none");
-  const [catFilter, setCatFilter] = useState("");
+  const [catFilter, setCatFilter] = useState(editCatData);
   const [proTitle, setProTitle] = useState("none");
   const [proDescription, setProDescription] = useState("none");
   const [proPrice, setProPrice] = useState("none");
   const [proCategory, setProCategory] = useState("none");
   const [proImage, setProImage] = useState("none");
   const [proFilter, setProFilter] = useState("");
-  const [id, setId] = useState("");
-  const [catData, setCatData] = useState(categoryData);
+  let [catEdit, setCatEdit] = useState(editCatData);
+  const [itemId, setItemId] = useState();
   const [proData, setProData] = useState(productData);
+
+  let { state } = useSelector((state) => state);
+  let catData = state.catData;
+
+  let { id } = state.userData;
+  // console.log(state.catData);
+  let dispatch = useDispatch();
 
   // <----------------------- Category functions ---------------------->
 
@@ -80,64 +82,63 @@ const MyStore = () => {
 
   // <------- Category CRUD functions ------>
 
+  let catEditOnChange = (e) => {
+    setCatEdit({ ...catEdit, [e.target.name]: e.target.value });
+  };
+  let catFilterOnChange = () => {};
   const handleCatFilter = () => {
     console.log(catFilter);
-    if (catFilter == "") {
-      setCatData(categoryData);
+    if (catFilter === "") {
+      // setCatData(categoryData);
       setDisplay3("none");
       return;
     }
     let filter = catFilter;
-    let filteredData = categoryData.filter((e) => {
-      return e.name == filter;
-    });
-    setCatData(filteredData);
+    // let filteredData = categoryData.filter((e) => {
+    //   return e.name === filter;
+    // });
+    // setCatData(filteredData);
     setDisplay3("none");
   };
 
   const handleCatAdd = (event) => {
     event.preventDefault();
-    let payload = {
-      name: catName,
-      slug: catSlug,
-      image: catImg,
-      _id: categoryData.length + 1,
-    };
-    let data = [...catData, payload];
-    setCatData(data);
+    catEdit = { ...catEdit, owner: id };
+
+    dispatch(addCategoryFunc(catEdit));
     alert("Category added Successfully");
     setDisplay4("none");
   };
 
   const handleCatEdit = (event) => {
     event.preventDefault();
-    let payload = {
-      name: catName,
-      slug: catSlug,
-      image: catImg,
-    };
-    let newData = [];
-    let filteredData = catData.filter((e) => {
-      if (e._id == id) {
-        let id = e._id,
-          owner = e.owner;
-        newData.push({ ...payload, id, owner });
-        return payload;
-      } else {
-        newData.push(e);
-        return e;
-      }
-    });
-    setCatData(newData);
+    catEdit = { ...catEdit, id: itemId };
+    dispatch(editCategoryFunc(catEdit));
+    dispatch(getCategoryFunc());
+
+    // let newData = [];
+    // let filteredData = catData.filter((e) => {
+    //   if (e._id === id) {
+    //     let id = e._id,
+    //       owner = e.owner;
+    //     newData.push({ ...payload, id, owner });
+    //     return payload;
+    //   } else {
+    //     newData.push(e);
+    //     return e;
+    //   }
+    // });
+    // setCatData(newData);
     alert("Edited Successfullly");
     setDisplay5("none");
   };
 
   const handleCatDlt = (e) => {
-    let i = e._id;
-    let data = catData.splice(1, i);
+    dispatch(deleteCategoryFunc(e));
+    dispatch(getCategoryFunc());
+
     alert("Delted Successfullly");
-    setCatData(data);
+    // setCatData(data);
   };
 
   // <----------------------- Product functions -------------------->
@@ -210,12 +211,49 @@ const MyStore = () => {
   };
 
   const handleProDlt = (e) => {
-    let i = e._id;
-    let data = proData.splice(1, i);
-    setProData(data);
+    
+    dispatch(deleteProductFunc(e));
+    dispatch(getProductFunc());
+
+    alert("Delted Successfullly");
   };
 
   // <---------------------------- Common Functions -------------------------->
+
+  let uploadImage = async (pics) => {
+    if (pics === undefined) {
+      alert("Please Select an Image!");
+      return;
+    }
+    // console.log(pics);
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "chat-easy");
+      data.append("cloud_name", "abhishekamber");
+      fetch("https://api.cloudinary.com/v1_1/abhishekamber/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log(data.url.toString());
+          setCatEdit({ ...catEdit, image: data.url.toString() });
+
+          // setCatImg(data.url.toString());
+          return;
+
+          // console.log();
+        })
+        .catch((err) => {
+          console.log(err);
+          return null;
+        });
+    } else {
+      alert("Please Select an Image!");
+      return null;
+    }
+  };
 
   const handleClose = (func) => {
     func("none");
@@ -227,7 +265,7 @@ const MyStore = () => {
 
   const handleOpen2 = (func, id) => {
     func("block");
-    setId(id);
+    setItemId(id);
   };
 
   const handleRefresh = () => {
@@ -235,8 +273,12 @@ const MyStore = () => {
   };
 
   useEffect(() => {
-    setCatData(catData);
-    setProData(proData);
+    dispatch(getCategoryFunc());
+  }, [display4, display5, display6]);
+
+  useEffect(() => {
+    // setCatData(catData);
+    // setProData(proData);
   }, [catData, proData]);
 
   return (
@@ -288,7 +330,7 @@ const MyStore = () => {
           <tbody>
             {catData &&
               catData?.map((e) => (
-                <tr>
+                <tr key={e._id}>
                   <td>
                     <img
                       src={e.image}
@@ -316,7 +358,7 @@ const MyStore = () => {
                         padding: "1%",
                         borderRadius: "2px",
                       }}
-                      onClick={() => handleCatDlt(e)}
+                      onClick={() => handleCatDlt(e._id)}
                     >
                       DELETE
                     </button>
@@ -408,15 +450,34 @@ const MyStore = () => {
             onClick={() => handleClose(setDisplay3)}
             src="https://png.pngtree.com/png-vector/20190603/ourmid/pngtree-icon-close-button-png-image_1357822.jpg"
             alt="closeBtn"
-          ></img>
+          />
         </div>
         <h1>Category Filter</h1>
-        <select name="" id="" onChange={(e) => setCatFilter(e.target.value)}>
-          <option value="">Select Name</option>
-          <option value="shirts">shirts</option>
-          <option value="T-shirts">T-shirts</option>
-          <option value=""></option>
-        </select>
+        <input
+          placeholder="catName"
+          type="text"
+          name="name"
+          onChange={catFilterOnChange}
+        />
+        <br />
+        <br />
+        <input
+          placeholder="catSlug"
+          type="text"
+          name="slug"
+          onChange={catFilterOnChange}
+        />
+        <br />
+        <br />
+        <input
+          placeholder="imageCat"
+          type="file"
+          onChange={(e) => {
+            uploadImage(e.target.files[0]);
+          }}
+          name="slug"
+        />
+
         <button
           className={styles.cat_filter_modal_submit}
           onClick={() => handleCatFilter()}
@@ -433,27 +494,31 @@ const MyStore = () => {
             onClick={() => handleClose(setDisplay4)}
             src="https://png.pngtree.com/png-vector/20190603/ourmid/pngtree-icon-close-button-png-image_1357822.jpg"
             alt="closeBtn"
-          ></img>
+          />
         </div>
         <h1>Add Category</h1>
         <form action="" onSubmit={(event) => handleCatAdd(event)}>
           <label htmlFor="">Category Name</label>
           <input
             type="text"
+            name="name"
             placeholder="Enter Category Name"
-            onChange={(e) => setCatName(e.target.value)}
+            onChange={catEditOnChange}
           />
           <label htmlFor="">Category Slug</label>
           <input
             type="text"
+            name="slug"
             placeholder="Enter Category Slug"
-            onChange={(e) => setCatSlug(e.target.value)}
+            onChange={catEditOnChange}
           />
           <label htmlFor="">Category Image</label>
           <input
-            type="text"
+            type="file"
             placeholder="Enter Category Image"
-            onChange={(e) => setCatImg(e.target.value)}
+            onChange={(e) => {
+              uploadImage(e.target.files[0]);
+            }}
           />
           <input
             type="submit"
@@ -478,21 +543,26 @@ const MyStore = () => {
           <label htmlFor="">Category Name</label>
           <input
             type="text"
+            name="name"
             placeholder="Enter Category Name"
-            onChange={(e) => setCatName(e.target.value)}
+            onChange={catEditOnChange}
           />
           <label htmlFor="">Category Slug</label>
           <input
             type="text"
+            name="slug"
             placeholder="Enter Category Slug"
-            onChange={(e) => setCatSlug(e.target.value)}
+            onChange={catEditOnChange}
           />
           <label htmlFor="">Category Image</label>
           <input
-            type="text"
+            type="file"
             placeholder="Enter Category Image"
-            onChange={(e) => setCatImg(e.target.value)}
+            onChange={(e) => {
+              uploadImage(e.target.files[0]);
+            }}
           />
+
           <input
             type="submit"
             className={styles.cat_edit_modal_submit}
