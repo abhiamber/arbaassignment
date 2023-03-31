@@ -1,0 +1,194 @@
+.head{
+    background-color: #ccc;
+    display: flex;
+    width: 80%;
+    margin: auto;
+    margin-top: 7%;
+}
+
+.cat,.pro{
+    width: 50%;
+    text-align: center;
+    border: 1px solid;
+}
+
+.cat_filter_div{
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: start;
+    margin-top: 5%;
+}
+
+.cat_div h1{
+    font-weight: bold;
+    margin-bottom: 2%;
+    color: purple;
+    font-size: larger;
+}
+
+.cat_filter{
+    background-color: teal;
+    margin: 2%;
+    padding: 1%;
+    border-radius: 2px;
+}
+
+.cat_table{
+    width: 80%;
+    margin: auto;
+    border: 1px solid;
+}
+
+.cat_table thead{
+    border: 1px solid;
+    background-color: rgb(7, 110, 151);
+    color: white;
+    border: 1px solid black;
+}
+
+.cat_table th,td{
+    border: 2px solid black;
+}
+
+.cat_filter_modal,.cat_add_modal,.cat_edit_modal{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    padding: 2%;
+   border-radius: 7px;
+    border: 2px solid #ccc;
+    background-color: bisque;
+}
+
+.cat_filter_modal select{
+    display: block;
+    width: 100%;
+    margin: auto;
+}
+
+.cat_filter_modal>div,.cat_add_modal>div,.cat_edit_modal>div{
+    display: flex;
+    justify-content: end;
+}
+
+.cat_filter_modal h1,.cat_add_modal h1,.cat_edit_modal h1{
+    font-weight: bold;
+    margin-bottom: 2%;
+    color: purple;
+    font-size: larger;
+}
+
+.cat_filter_modal img,.cat_add_modal img,.cat_edit_modal img{
+    width: 33px;
+    height: 33px;
+    background-color: bisque;
+}
+
+.cat_add_modal form,.cat_edit_modal form{
+    display: flex;
+    flex-direction: column;
+}
+
+.cat_add_modal_submit,.cat_edit_modal_submit,.cat_filter_modal_submit{
+    width: 100%;
+    margin: auto;
+    margin-top: 7%;
+    border-radius: 7px;
+    padding: 1%;
+    background-color: purple;
+}
+
+
+/* Product-css */
+
+.pro_filter_div{
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: start;
+    margin-top: 5%;
+}
+
+.pro_filter{
+    background-color: teal;
+    margin: 2%;
+    padding: 1%;
+    border-radius: 2px;
+}
+
+.pro_div h1{
+    font-weight: bold;
+    margin-bottom: 2%;
+    color: purple;
+    font-size: larger;
+}
+
+.pro_table{
+    width: 80%;
+    margin: auto;
+    border: 1px solid;
+}
+
+.pro_table thead{
+    border: 1px solid;
+    background-color: rgb(7, 110, 151);
+    color: white;
+    border: 1px solid black;
+}
+
+.pro_table th,td{
+    border: 2px solid black;
+}
+
+.pro_filter_modal,.pro_add_modal,.pro_edit_modal{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    padding: 2%;
+   border-radius: 7px;
+    border: 2px solid #ccc;
+    background-color: bisque;
+  }
+
+  .pro_filter_modal select{
+    display: block;
+    width: 100%;
+    margin: auto;
+}
+  
+  .pro_filter_modal>div,.pro_add_modal>div,.pro_edit_modal>div{
+    display: flex;
+    justify-content: end;
+  }
+  
+  .pro_filter_modal h1,.pro_add_modal h1,.pro_edit_modal h1{
+    font-weight: bold;
+    margin-bottom: 2%;
+    color: purple;
+    font-size: larger;
+  }
+  
+  .pro_filter_modal img,.pro_add_modal img,.pro_edit_modal img{
+    width: 33px;
+    height: 33px;
+    background-color: bisque;
+  }
+  
+  .pro_add_modal form,.pro_edit_modal form{
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .pro_add_modal_submit,.pro_edit_modal_submit,.pro_filter_modal_submit{
+    width: 100%;
+    margin: auto;
+    margin-top: 7%;
+    border-radius: 7px;
+    padding: 1%;
+    background-color: purple;
+  }
