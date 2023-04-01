@@ -1,43 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/MyStore.module.css";
-import { postDetails } from "../CloudiNary";
+// import { postDetails } from "../CloudiNary";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCategoryFunc,
+  addProductFunc,
   deleteCategoryFunc,
   deleteProductFunc,
   editCategoryFunc,
   getCategoryFunc,
   getProductFunc,
 } from "../Redux/action";
-import { GETCATDATA } from "../Redux/action.type";
+// import { GETCATDATA } from "../Redux/action.type";
 
-let productData = [
-  {
-    _id: 1,
-    title: "Levi's",
-    description: "lorem5",
-    price: "500",
-    category: "T-shirts",
-    image:
-      "http://localhost:3000/static/media/PRO%20MANI%20LOGO.3423e0232b72624313ab.jpg",
-    owner: "a0x13bskghXx1203",
-  },
-  {
-    _id: 2,
-    title: "Roadster",
-    description: "lorem5",
-    price: "1000",
-    category: "shirts",
-    image:
-      "http://localhost:3000/static/media/PRO%20MANI%20LOGO.3423e0232b72624313ab.jpg",
-    owner: "a0x13bskghXx1203",
-  },
-];
+
 let editCatData = {
   name: "",
   slug: "",
+  image: "",
+};
+
+let editProdData = {
+  title: "",
+  description: "",
+  price: "",
+  category: "",
   image: "",
 };
 
@@ -61,11 +49,13 @@ const MyStore = () => {
   const [proImage, setProImage] = useState("none");
   const [proFilter, setProFilter] = useState("");
   let [catEdit, setCatEdit] = useState(editCatData);
+  let [prodEdit, setProdEdit] = useState(editProdData);
   const [itemId, setItemId] = useState();
-  const [proData, setProData] = useState(productData);
+  // let [proDataa, setProData] = useState(productData);
 
   let { state } = useSelector((state) => state);
   let catData = state.catData;
+  let proData = state.proData;
 
   let { id } = state.userData;
   // console.log(state.catData);
@@ -152,33 +142,30 @@ const MyStore = () => {
   // <------ Product CRUD functions ------>
 
   const handleProFilter = () => {
-    console.log(proFilter, productData);
     if (proFilter === "") {
-      setProData(productData);
+      // setProData(productData);
       setDisplay6("none");
       return;
     }
-    let filter = proFilter;
-    let filteredData = productData.filter((e) => {
-      return e.category === filter;
-    });
-    setProData(filteredData);
+    // let filter = proFilter;
+    // let filteredData = productData.filter((e) => {
+    //   return e.category === filter;
+    // });
+    // setProData(filteredData);
     setDisplay6("none");
   };
 
+  let prodEditOnChange = (e) => {
+    setProdEdit({ ...prodEdit, [e.target.name]: e.target.value });
+  };
   const handleProAdd = (event) => {
     event.preventDefault();
-    let payload = {
-      title: proTitle,
-      description: proDescription,
-      price: proPrice,
-      category: proCategory,
-      image: proImage,
-      _id: proData.length + 1,
-    };
-    let data = [...proData, payload];
-    setProData(data);
-    console.log(proData);
+
+    prodEdit = { ...prodEdit, owner: id };
+
+    dispatch(addProductFunc(prodEdit));
+    // alert("Category added Successfully");
+    // console.log(prodEdit);
     alert("Product added Successfully");
     setDisplay7("none");
   };
@@ -193,25 +180,24 @@ const MyStore = () => {
       image: proImage,
     };
     let newData = [];
-    let filteredData = proData.filter((e) => {
-      if (e._id == id) {
-        let i = e._id,
-          owner = e.owner;
-        newData.push({ ...payload, _id: i, owner });
-        return payload;
-      } else {
-        newData.push(e);
-        return e;
-      }
-    });
+    // let filteredData = proData.filter((e) => {
+    //   if (e._id == id) {
+    //     let i = e._id,
+    //       owner = e.owner;
+    //     newData.push({ ...payload, _id: i, owner });
+    //     return payload;
+    //   } else {
+    //     newData.push(e);
+    //     return e;
+    //   }
+    // });
     console.log(newData);
-    setProData(newData);
+    // setProData(newData);
     alert("Product Edited Successfullly");
     setDisplay8("none");
   };
 
   const handleProDlt = (e) => {
-    
     dispatch(deleteProductFunc(e));
     dispatch(getProductFunc());
 
@@ -239,6 +225,7 @@ const MyStore = () => {
         .then((data) => {
           // console.log(data.url.toString());
           setCatEdit({ ...catEdit, image: data.url.toString() });
+          setProdEdit({ ...prodEdit, image: data.url.toString() });
 
           // setCatImg(data.url.toString());
           return;
@@ -277,9 +264,8 @@ const MyStore = () => {
   }, [display4, display5, display6]);
 
   useEffect(() => {
-    // setCatData(catData);
-    // setProData(proData);
-  }, [catData, proData]);
+    dispatch(getProductFunc());
+  }, [display1, display2, display3]);
 
   return (
     <>
@@ -400,8 +386,8 @@ const MyStore = () => {
           </thead>
           <tbody>
             {proData &&
-              proData?.map((e) => (
-                <tr>
+              proData.map((e, index) => (
+                <tr key={index}>
                   <td>
                     <img
                       src={e.image}
@@ -611,32 +597,48 @@ const MyStore = () => {
           <label htmlFor="">Product Title</label>
           <input
             type="text"
+            name="title"
             placeholder="Enter Product Title"
-            onChange={(e) => setProTitle(e.target.value)}
+            onChange={prodEditOnChange}
           />
           <label htmlFor="">Product Description</label>
           <input
             type="text"
             placeholder="Enter Category Description"
-            onChange={(e) => setProDescription(e.target.value)}
+            name="description"
+            onChange={prodEditOnChange}
           />
           <label htmlFor="">Product Price</label>
           <input
             type="text"
+            name="price"
             placeholder="Enter Product Price"
-            onChange={(e) => setProPrice(e.target.value)}
+            onChange={prodEditOnChange}
           />
           <label htmlFor="">Product Category</label>
-          <input
+          <select
             type="text"
             placeholder="Enter Product Category"
-            onChange={(e) => setProCategory(e.target.value)}
-          />
+            name="category"
+            onChange={prodEditOnChange}
+          >
+            {catData &&
+              catData.map((elem, index) => {
+                return (
+                  <option key={index} value={elem._id}>
+                    {elem._id}
+                  </option>
+                );
+              })}
+          </select>
+
           <label htmlFor="">Product Image</label>
           <input
-            type="text"
-            placeholder="Enter Image Image"
-            onChange={(e) => setProImage(e.target.value)}
+            type="file"
+            placeholder="Enter Prodoct Image"
+            onChange={(e) => {
+              uploadImage(e.target.files[0]);
+            }}
           />
           <input
             type="submit"

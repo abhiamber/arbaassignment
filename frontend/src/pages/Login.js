@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API } from "../API";
 import { useDispatch } from "react-redux";
@@ -56,6 +56,11 @@ const Login = () => {
     navigate("/sign");
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/home");
+    }
+  }, []);
   return (
     <div>
       <h1>App Name</h1>
