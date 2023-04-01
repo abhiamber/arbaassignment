@@ -114,7 +114,7 @@ export let addProductFunc = (data) => async (dispatch) => {
     let data = await res.json();
 
     if (data.status === "OK") {
-      console.log(data.message);
+      // console.log(data.message);
       dispatch({ type: ADDPRODATA, payload: data.message });
       getCategoryFunc();
     }
@@ -141,7 +141,29 @@ export let getProductFunc = () => async (dispatch) => {
 // *****************Edit prod***************
 
 export let editProductFunc = (data) => async (dispatch) => {
-  let res = await fetch(`${API}/cat`, {
+  let res = await fetch(`${API}/prod`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+  try {
+    let data = await res.json();
+    console.log(data);
+
+    if (data.status === "OK") {
+      // console.log(data.category);
+      // dispatch({ type: ADDCARTDATA, payload: data.category });
+      getProductFunc();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+// ************prod edit image change********
+export let editProductImageFunc = (data) => async (dispatch) => {
+  let res = await fetch(`${API}/prod/img`, {
     method: "PATCH",
     body: JSON.stringify(data),
     headers: {

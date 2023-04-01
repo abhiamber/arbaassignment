@@ -9,11 +9,12 @@ import {
   deleteCategoryFunc,
   deleteProductFunc,
   editCategoryFunc,
+  editProductFunc,
+  editProductImageFunc,
   getCategoryFunc,
   getProductFunc,
 } from "../Redux/action";
 // import { GETCATDATA } from "../Redux/action.type";
-
 
 let editCatData = {
   name: "",
@@ -172,27 +173,21 @@ const MyStore = () => {
 
   const handleProEdit = (event) => {
     event.preventDefault();
-    let payload = {
-      title: proTitle,
-      description: proDescription,
-      price: proPrice,
-      category: proCategory,
-      image: proImage,
-    };
-    let newData = [];
-    // let filteredData = proData.filter((e) => {
-    //   if (e._id == id) {
-    //     let i = e._id,
-    //       owner = e.owner;
-    //     newData.push({ ...payload, _id: i, owner });
-    //     return payload;
-    //   } else {
-    //     newData.push(e);
-    //     return e;
-    //   }
-    // });
-    console.log(newData);
-    // setProData(newData);
+
+    prodEdit = { ...prodEdit, id: itemId };
+
+    console.log(prodEdit);
+    dispatch(editProductFunc(prodEdit));
+
+    alert("Product Edited Successfullly");
+    setDisplay8("none");
+  };
+
+  let handleProdImageChange = () => {
+    prodEdit = { ...prodEdit, id: itemId };
+    // console.log(prodEdit);
+    dispatch(editProductImageFunc(prodEdit));
+
     alert("Product Edited Successfullly");
     setDisplay8("none");
   };
@@ -417,7 +412,7 @@ const MyStore = () => {
                         padding: "1%",
                         borderRadius: "2px",
                       }}
-                      onClick={() => handleProDlt(e)}
+                      onClick={() => handleProDlt(e._id)}
                     >
                       DELETE
                     </button>
@@ -659,43 +654,60 @@ const MyStore = () => {
           ></img>
         </div>
         <h1>Edit Product</h1>
-        <form action="" onSubmit={(event) => handleProEdit(event)}>
-          <label htmlFor="">Product Title</label>
-          <input
-            type="text"
-            placeholder="Enter Product Title"
-            onChange={(e) => setProTitle(e.target.value)}
-          />
-          <label htmlFor="">Product Description</label>
-          <input
-            type="text"
-            placeholder="Enter Category Description"
-            onChange={(e) => setProDescription(e.target.value)}
-          />
-          <label htmlFor="">Product Price</label>
-          <input
-            type="text"
-            placeholder="Enter Product Price"
-            onChange={(e) => setProPrice(e.target.value)}
-          />
-          <label htmlFor="">Product Category</label>
-          <input
-            type="text"
-            placeholder="Enter Product Category"
-            onChange={(e) => setProCategory(e.target.value)}
-          />
+        <hr />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h1>From change price title description</h1>
+          <br />
+          <form action="" onSubmit={(event) => handleProEdit(event)}>
+            <label htmlFor="">Product Title</label>
+            <input
+              type="text"
+              name="title"
+              placeholder="Enter Product Title"
+              onChange={prodEditOnChange}
+            />
+            <label htmlFor="">Product Description</label>
+            <input
+              type="text"
+              placeholder="Enter Category Description"
+              name="description"
+              onChange={prodEditOnChange}
+            />
+            <label htmlFor="">Product Price</label>
+            <input
+              type="text"
+              name="price"
+              placeholder="Enter Product Price"
+              onChange={prodEditOnChange}
+            />
+            <input
+              type="submit"
+              className={styles.pro_edit_modal_submit}
+              value={"EDIT PRODUCT"}
+            />
+          </form>
+        </div>
+        <hr />
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h1> From Here Changle Only Image</h1>
           <label htmlFor="">Product Image</label>
           <input
-            type="text"
-            placeholder="Enter Image Image"
-            onChange={(e) => setProImage(e.target.value)}
+            type="file"
+            placeholder="Enter Prodoct Image"
+            onChange={(e) => {
+              uploadImage(e.target.files[0]);
+            }}
           />
-          <input
+          <button
             type="submit"
             className={styles.pro_edit_modal_submit}
             value={"EDIT PRODUCT"}
-          />
-        </form>
+            onClick={handleProdImageChange}
+          >
+            {" "}
+            submit{" "}
+          </button>
+        </div>
       </div>
     </>
   );
