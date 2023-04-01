@@ -1,10 +1,30 @@
-import { ADDCARTDATA, ADDPRODATA, GETCATDATA, GETLOCALPROD, GETPRODATA } from "./action.type";
+import {
+  ADDCARTDATA,
+  ADDPRODATA,
+  GETCATDATA,
+  GETLOCALPROD,
+  GETPRODATA,
+} from "./action.type";
+
+function getCartTotal() {
+  let sum = 0;
+  let localStorShowData =
+    JSON.parse(localStorage.getItem("localProdData")) || [];
+
+  for (let i = 0; i < localStorShowData.length; i++) {
+    if (localStorShowData[i].qty > 0) {
+      sum++;
+    }
+  }
+  return sum;
+}
 
 let initialState = {
   auth: localStorage.getItem("token") || null,
   userData: {},
   catData: [],
   showProdData: [],
+  totalCart: getCartTotal(),
 
   proData: [],
 };
@@ -35,7 +55,9 @@ export const reducer = (state = initialState, { type, payload }) => {
       return { ...state, proData: [...state.proData, payload] };
     }
     case GETLOCALPROD: {
-      return { ...state, showProdData:  payload };
+      let data = getCartTotal();
+
+      return { ...state, showProdData: payload, totalCart: data };
     }
 
     default: {

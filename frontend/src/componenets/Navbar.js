@@ -1,13 +1,19 @@
 import React from "react";
 import UserProfileMenu from "./UserProfileMenu";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-function handleCartItem() {
-  return 0;
-}
+// function handleCartItem() {
+//   return 0;
+// }
 
 const Navbar = () => {
   let token = localStorage.getItem("token");
+
+  let { state } = useSelector((state) => state);
+  let totalCart = state.totalCart;
+
+  // console.log(showProdData);
 
   return (
     <div>
@@ -32,11 +38,7 @@ const Navbar = () => {
           }}
         >
           <div>
-            {token ? (
-              <Link to="/cart">Cart {handleCartItem()} </Link>
-            ) : (
-              <p>Cart 0</p>
-            )}
+            {token ? <Link to="/cart">Cart {totalCart} </Link> : <p>Cart 0</p>}
           </div>
           <div>
             <UserProfileMenu />

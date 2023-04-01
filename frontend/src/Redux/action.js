@@ -256,7 +256,7 @@ export let getProductLocalFunc = () => async (dispatch) => {
 };
 
 export let qtyHandleFuncLocalProd = (id, qty) => async (dispatch) => {
-  console.log(id, qty);
+  // console.log(id, qty);
   let localStorShowData =
     JSON.parse(localStorage.getItem("localProdData")) || null;
   let localData =
@@ -268,18 +268,7 @@ export let qtyHandleFuncLocalProd = (id, qty) => async (dispatch) => {
         return elem;
       }
     });
-  // console.log("m m");
-  // for (let i = 0; i < data.message.length; i++) {
-  //   let tqty = 0;
-  //   for (let j = 0; j < localStorShowData.length; j++) {
-  //     if (data.message[i]._id === localStorShowData[j]._id) {
-  //       tqty = localStorShowData[j].qty;
-  //       break;
-  //     }
-  //   }
-  //   localData.push({ ...data.message[i], qty: tqty });
-  // }
-  console.log(localData);
+  
   localStorage.setItem("localProdData", JSON.stringify(localData));
 
   dispatch({ type: GETLOCALPROD, payload: localData });

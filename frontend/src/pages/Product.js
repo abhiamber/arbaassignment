@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductLocalFunc } from "../Redux/action";
+import { getProductLocalFunc, qtyHandleFuncLocalProd } from "../Redux/action";
 
 const Product = () => {
   let { state } = useSelector((state) => state);
@@ -8,6 +8,9 @@ const Product = () => {
 
   // console.log(showProdData);
   let dispatch = useDispatch();
+  let handleQtyChange = (id, qty) => {
+    dispatch(qtyHandleFuncLocalProd(id, qty));
+  };
 
   useEffect(() => {
     dispatch(getProductLocalFunc());
@@ -32,13 +35,20 @@ const Product = () => {
                 <p>{elem.description}</p>
                 <p>{elem.price}</p>
                 {elem.qty === 0 ? (
-                  <button>Add to Cart</button>
+                  <button onClick={() => handleQtyChange(elem._id, 1)}>
+                    {" "}
+                    Add to Cart
+                  </button>
                 ) : (
                   <div>
-                    <button>-</button>
+                    <button onClick={() => handleQtyChange(elem._id, -1)}>
+                      -
+                    </button>
 
                     <button>{elem.qty}</button>
-                    <button>+</button>
+                    <button onClick={() => handleQtyChange(elem._id, +1)}>
+                      +
+                    </button>
                   </div>
                 )}
               </div>
