@@ -33,7 +33,7 @@ app.post("/signin", async (req, res) => {
 // *******************login****************
 app.post("/login", async (req, res) => {
   const { userName, password, id } = req.body;
-  // console.log(userName);
+  console.log(userName);
   let user = await UserModel.findOne({ userName });
   // console.log(user);
   if (!user) {

@@ -24,12 +24,13 @@ const Login = () => {
     if (!userName && !password) {
       return alert("plz fill all the required details");
     }
+    console.log(user);
 
     let res = await fetch(`${API}/user/login`, {
       method: "POST",
       body: JSON.stringify(user),
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
       },
     });
 
