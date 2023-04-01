@@ -1,58 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Crousel from "../componenets/Crousel";
 import Popup from "../componenets/Popup";
 import { Link } from "react-router-dom";
 import Navbar from "../componenets/Navbar";
-let data = [
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { getProductLocalFunc, qtyHandleFuncLocalProd } from "../Redux/action";
 
 const slides = [
   "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
@@ -61,6 +13,19 @@ const slides = [
 ];
 
 const Home = () => {
+  let { state } = useSelector((state) => state);
+  let showProdData = state.showProdData.slice(0, 8);
+
+  // console.log(showProdData);
+  let dispatch = useDispatch();
+
+  let handleQtyChange = (id, qty) => {
+    dispatch(qtyHandleFuncLocalProd(id, qty));
+  };
+
+  useEffect(() => {
+    dispatch(getProductLocalFunc());
+  }, []);
   return (
     <div>
       <h1>Product</h1>
@@ -77,15 +42,31 @@ const Home = () => {
           gridTemplateColumns: "repeat(4,1fr)",
         }}
       >
-        {data.map((elem, index) => {
+        {showProdData.map((elem, index) => {
           return (
             <div key={index}>
-              <img src={elem.url} alt="images" />
+              <img src={elem.image} style={{ width: "30%" }} alt="images" />
               <div>
                 <p>{elem.title}</p>
                 <p>{elem.description}</p>
                 <p>{elem.price}</p>
-                <button>Add to Cart</button>
+                {elem.qty === 0 ? (
+                  <button onClick={() => handleQtyChange(elem._id, 1)}>
+                    {" "}
+                    Add to Cart
+                  </button>
+                ) : (
+                  <div>
+                    <button onClick={() => handleQtyChange(elem._id, -1)}>
+                      -
+                    </button>
+
+                    <button>{elem.qty}</button>
+                    <button onClick={() => handleQtyChange(elem._id, +1)}>
+                      +
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );

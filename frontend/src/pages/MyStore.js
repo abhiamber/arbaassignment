@@ -43,16 +43,11 @@ const MyStore = () => {
   const [display7, setDisplay7] = useState("none");
   const [display8, setDisplay8] = useState("none");
   const [catFilter, setCatFilter] = useState(editCatData);
-  const [proTitle, setProTitle] = useState("none");
-  const [proDescription, setProDescription] = useState("none");
-  const [proPrice, setProPrice] = useState("none");
-  const [proCategory, setProCategory] = useState("none");
-  const [proImage, setProImage] = useState("none");
+
   const [proFilter, setProFilter] = useState("");
   let [catEdit, setCatEdit] = useState(editCatData);
   let [prodEdit, setProdEdit] = useState(editProdData);
   const [itemId, setItemId] = useState();
-  // let [proDataa, setProData] = useState(productData);
 
   let { state } = useSelector((state) => state);
   let catData = state.catData;
@@ -144,15 +139,9 @@ const MyStore = () => {
 
   const handleProFilter = () => {
     if (proFilter === "") {
-      // setProData(productData);
       setDisplay6("none");
       return;
     }
-    // let filter = proFilter;
-    // let filteredData = productData.filter((e) => {
-    //   return e.category === filter;
-    // });
-    // setProData(filteredData);
     setDisplay6("none");
   };
 
@@ -165,9 +154,7 @@ const MyStore = () => {
     prodEdit = { ...prodEdit, owner: id };
 
     dispatch(addProductFunc(prodEdit));
-    // alert("Category added Successfully");
-    // console.log(prodEdit);
-    alert("Product added Successfully");
+    alert("Product edit Successfully");
     setDisplay7("none");
   };
 

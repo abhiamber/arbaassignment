@@ -1,70 +1,46 @@
-import React from "react";
-let data = [
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-  {
-    url: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcR0VgMgSw_yk5WLE3esnkpd7PhlA1gi8VphnzjVWjQhuogX_2P2",
-    title: "title1",
-    description: "description",
-    price: "20",
-  },
-];
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductLocalFunc } from "../Redux/action";
 
 const Product = () => {
+  let { state } = useSelector((state) => state);
+  let showProdData = state.showProdData;
+
+  // console.log(showProdData);
+  let dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProductLocalFunc());
+  }, []);
   return (
     <div>
       <h1>Product</h1>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)" }}>
-        {data.map((elem, index) => {
+      <div
+        style={{
+          marginBottom: "30px",
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+        }}
+      >
+        {showProdData.map((elem, index) => {
           return (
             <div key={index}>
-              <img src={elem.url} alt="images" />
+              <img src={elem.image} style={{ width: "30%" }} alt="images" />
               <div>
                 <p>{elem.title}</p>
                 <p>{elem.description}</p>
                 <p>{elem.price}</p>
-                <button>Add to Cart</button>
+                {elem.qty === 0 ? (
+                  <button>Add to Cart</button>
+                ) : (
+                  <div>
+                    <button>-</button>
+
+                    <button>{elem.qty}</button>
+                    <button>+</button>
+                  </div>
+                )}
               </div>
             </div>
           );

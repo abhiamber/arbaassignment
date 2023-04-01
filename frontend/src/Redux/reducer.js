@@ -1,9 +1,10 @@
-import { ADDCARTDATA, ADDPRODATA, GETCATDATA, GETPRODATA } from "./action.type";
+import { ADDCARTDATA, ADDPRODATA, GETCATDATA, GETLOCALPROD, GETPRODATA } from "./action.type";
 
 let initialState = {
   auth: localStorage.getItem("token") || null,
   userData: {},
   catData: [],
+  showProdData: [],
 
   proData: [],
 };
@@ -32,6 +33,9 @@ export const reducer = (state = initialState, { type, payload }) => {
 
     case ADDPRODATA: {
       return { ...state, proData: [...state.proData, payload] };
+    }
+    case GETLOCALPROD: {
+      return { ...state, showProdData:  payload };
     }
 
     default: {
